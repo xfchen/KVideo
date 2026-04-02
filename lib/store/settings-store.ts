@@ -139,6 +139,24 @@ function getDefaultAppSettings(): AppSettings {
   };
 }
 
+export function hasStoredAppSetting(key: keyof AppSettings): boolean {
+  if (typeof window === 'undefined') {
+    return false;
+  }
+
+  const stored = localStorage.getItem(SETTINGS_KEY);
+  if (!stored) {
+    return false;
+  }
+
+  try {
+    const parsed = JSON.parse(stored);
+    return Object.prototype.hasOwnProperty.call(parsed, key);
+  } catch {
+    return false;
+  }
+}
+
 export const settingsStore = {
   getSettings(): AppSettings {
     // SSR: Return defaults
